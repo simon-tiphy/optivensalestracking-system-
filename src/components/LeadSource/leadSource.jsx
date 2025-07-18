@@ -198,7 +198,7 @@ export function LeadSource({leadSourceData, trendData}){
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">Top Performing Sources</h3>
         <div className="space-y-4">
-          {leadSourceData
+          {[...leadSourceData]
             .sort((a, b) => b.conversionRate - a.conversionRate)
             .slice(0, 5)
             .map((source, index) => (
