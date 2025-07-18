@@ -26,11 +26,11 @@ function Sidebar({ navTabs, activeTab, setActiveTab }) {
   return (
     <aside
       className={`
-        sticky top-0            /* keep it at the top */
-        h-screen               /* full viewport height */
+        sticky top-0
+        h-screen
         flex flex-col
-        bg-[var(--color-background)]
-        border-r border-[var(--color-accent)]
+        bg-gray-800
+        border-r border-gray-700
         transition-all duration-300
         ${collapsed ? "w-16" : "w-64"}
       `}
@@ -42,12 +42,12 @@ function Sidebar({ navTabs, activeTab, setActiveTab }) {
         onClick={() => setCollapsed(!collapsed)}
         className={`
           absolute top-4 right-4 p-1 rounded
-          hover:bg-[var(--color-accent)]
+          hover:bg-gray-700
           ${collapsed ? "" : "rotate-180"}
           transition-transform duration-200
         `}
       >
-        <Menu size={20} />
+        <Menu size={20} className="text-gray-200" />
       </button>
 
       {/* Tabs */}
@@ -65,9 +65,9 @@ function Sidebar({ navTabs, activeTab, setActiveTab }) {
                   flex items-center space-x-3
                   w-full px-3 py-2 rounded
                   ${isActive
-                    ? "bg-[var(--color-secondary)] text-white font-bold"
-                    : "text-[var(--color-text)]"}
-                  hover:bg-[var(--color-secondary)] hover:text-white
+                    ? "bg-green-600 text-white font-bold"
+                    : "text-gray-300"}
+                  hover:bg-green-500 hover:text-white
                   transition
                 `}
               >
