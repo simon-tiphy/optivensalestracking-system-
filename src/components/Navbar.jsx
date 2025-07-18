@@ -3,7 +3,7 @@ import { FileText } from 'lucide-react'; // PDF icon
 function Navbar() {
   return (
     <nav
-      className="flex items-center justify-between px-6 py-3 bg-green-100 shadow-md"
+      className="flex items-center justify-between px-6 py-3 bg-gray-300 shadow-md"
     >
       {/* Logo */}
       <div className="flex items-center gap-4">
