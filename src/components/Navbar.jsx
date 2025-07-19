@@ -1,5 +1,3 @@
-
-
 import { FileText, Menu } from 'lucide-react';
 import { useState } from 'react';
 
@@ -7,14 +5,14 @@ function Navbar() {
   const [showMenu, setShowMenu] = useState(false);
 
   return (
-    <nav className="bg-gray-300 shadow-md px-4 py-3">
+    <nav className="bg-gray-800 shadow-md px-4 py-3">
       <div className="flex items-center justify-between flex-wrap">
         {/* Logo */}
         <div className="flex items-center gap-3">
           <img
             src="https://www.optiven.co.ke/wp-content/uploads/2023/09/optiven-group-logo.png"
             alt="Optiven Logo"
-            className="h-12 w-auto"
+            className="h-15 w-auto"
           />
         </div>
 
@@ -72,3 +70,5 @@ function Navbar() {
 }
 
 export default Navbar;
+
+
