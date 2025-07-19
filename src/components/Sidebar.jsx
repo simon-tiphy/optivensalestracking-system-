@@ -84,6 +84,7 @@
 
 // export default Sidebar;
 
+
 import React, { useState } from "react"
 import { Menu, LogOut } from "lucide-react"
 import {
@@ -112,70 +113,71 @@ function Sidebar({ navTabs, activeTab, setActiveTab, userName = "Tiphy" }) {
   return (
     <aside
       className={`
-        sticky top-0 h-screen flex flex-col justify-between
-        bg-gray-800 border-r border-gray-700
+        fixed inset-y-0 left-0 flex flex-col justify-between
+        bg-gray-800 border-r border-gray-700 z-50
         transition-all duration-300
         ${collapsed ? "w-16" : "w-64"}
       `}
-      onMouseEnter={() => collapsed && setCollapsed(false)}
-      onMouseLeave={() => !collapsed && setCollapsed(true)}
     >
-      {/* Header: Welcome + Toggle */}
-      <div className="flex items-center justify-between px-4 pt-6">
-        <div className="flex items-center space-x-3">
-          <div
-            className={`
-              bg-green-500 flex-shrink-0 rounded-full
-              ${collapsed ? "w-8 h-8" : "w-10 h-10"}
-              flex items-center justify-center text-white font-bold
-            `}
-          >
-            {userName.charAt(0)}
-          </div>
-          {!collapsed && (
-            <div className="text-gray-100">
-              <p className="text-sm">Welcome,</p>
-              <p className="font-semibold">{userName}</p>
+      {/* Make the inner area scrollable if too tall */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Header: Welcome + Toggle */}
+        <div className="flex items-center justify-between px-4 pt-6">
+          <div className="flex items-center space-x-3">
+            <div
+              className={`
+                bg-green-500 flex-shrink-0 rounded-full
+                ${collapsed ? "w-8 h-8" : "w-10 h-10"}
+                flex items-center justify-center text-white font-bold
+              `}
+            >
+              {userName.charAt(0)}
             </div>
-          )}
+            {!collapsed && (
+              <div className="text-gray-100">
+                <p className="text-sm">Welcome,</p>
+                <p className="font-semibold">{userName}</p>
+              </div>
+            )}
+          </div>
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="p-1 rounded hover:bg-gray-700 text-gray-200 transition-transform duration-200"
+          >
+            <Menu size={20} />
+          </button>
         </div>
-        <button
-          onClick={() => setCollapsed(!collapsed)}
-          className="p-1 rounded hover:bg-gray-700 text-gray-200 transition-transform duration-200"
-        >
-          <Menu size={20} />
-        </button>
-      </div>
 
-      {/* Navigation Tabs */}
-      <ul className="mt-8 space-y-2 px-2 flex-1">
-        {navTabs.map((tab) => {
-          const isActive = activeTab === tab.name
-          return (
-            <li key={tab.name}>
-              <button
-                onClick={() => {
-                  setActiveTab(tab.name)
-                  setCollapsed(true)
-                }}
-                className={`
-                  flex items-center space-x-3 w-full
-                  px-3 py-2 rounded-lg
-                  transition-colors duration-200
-                  ${
-                    isActive
-                      ? "bg-green-600 text-white"
-                      : "text-gray-300 hover:bg-gray-700 hover:text-white"
-                  }
-                `}
-              >
-                <span className="flex-shrink-0">{ICONS[tab.name]}</span>
-                {!collapsed && <span className="whitespace-nowrap">{tab.name}</span>}
-              </button>
-            </li>
-          )
-        })}
-      </ul>
+        {/* Navigation Tabs */}
+        <ul className="mt-8 space-y-2 px-2">
+          {navTabs.map((tab) => {
+            const isActive = activeTab === tab.name
+            return (
+              <li key={tab.name}>
+                <button
+                  onClick={() => {
+                    setActiveTab(tab.name)
+                    setCollapsed(true)
+                  }}
+                  className={`
+                    flex items-center space-x-3 w-full
+                    px-3 py-2 rounded-lg
+                    transition-colors duration-200
+                    ${
+                      isActive
+                        ? "bg-green-600 text-white"
+                        : "text-gray-300 hover:bg-gray-700 hover:text-white"
+                    }
+                  `}
+                >
+                  <span className="flex-shrink-0">{ICONS[tab.name]}</span>
+                  {!collapsed && <span className="whitespace-nowrap">{tab.name}</span>}
+                </button>
+              </li>
+            )
+          })}
+        </ul>
+      </div>
 
       {/* Logout Button */}
       <div className="px-4 pb-6">
