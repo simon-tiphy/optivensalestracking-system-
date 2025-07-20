@@ -161,3 +161,151 @@ export function getLeadSummaryStats(rawData) {
   };
 }
 
+export function transformLeadData(inputData) {
+    // Helper function to generate random time ago
+    function getRandomTimeAgo() {
+        const times = ["1 min ago", "2 min ago", "5 min ago", "8 min ago", "10 min ago", "15 min ago", "20 min ago", "30 min ago", "1 hour ago"];
+        return times[Math.floor(Math.random() * times.length)];
+    }
+
+    // Helper function to determine status based on lead score and conversation summary
+    function determineStatus(leadScore, conversationSummary) {
+        const summary = conversationSummary.toLowerCase();
+        const score = leadScore.toLowerCase();
+        
+        if (summary.includes('thank') || summary.includes('received') || summary.includes('got it')) {
+            return 'closed';
+        } else if (score === 'hot' || summary.includes('interested') || summary.includes('demo')) {
+            return 'active';
+        } else if (summary.includes('question') || summary.includes('when') || summary.includes('how') || summary.includes('pricing')) {
+            return 'pending';
+        } else {
+            return 'responded';
+        }
+    }
+
+    // Helper function to generate appropriate message based on conversation summary
+    function generateMessage(conversationSummary, leadScore) {
+        const summary = conversationSummary.toLowerCase();
+        
+        if (summary.includes('demo')) {
+            return 'Interested in your product demo';
+        } else if (summary.includes('pricing') || summary.includes('price')) {
+            return 'Can you send me the pricing?';
+        } else if (summary.includes('webinar') || summary.includes('event')) {
+            return 'When is the next webinar?';
+        } else if (summary.includes('information') || summary.includes('details')) {
+            return 'Thank you for the information';
+        } else if (summary.includes('call') || summary.includes('meeting')) {
+            return 'Would like to schedule a call';
+        } else if (summary.includes('question')) {
+            return 'I have some questions about your service';
+        } else {
+            // Default messages based on lead score
+            const hotMessages = [
+                'Very interested in learning more',
+                'Ready to move forward',
+                'Would like to discuss next steps'
+            ];
+            const warmMessages = [
+                'Looking for more information',
+                'Considering your solution',
+                'Need some additional details'
+            ];
+            const coldMessages = [
+                'Just browsing for now',
+                'Will get back to you later',
+                'Still evaluating options'
+            ];
+            
+            const score = leadScore.toLowerCase();
+            if (score === 'hot') {
+                return hotMessages[Math.floor(Math.random() * hotMessages.length)];
+            } else if (score === 'warm') {
+                return warmMessages[Math.floor(Math.random() * warmMessages.length)];
+            } else {
+                return coldMessages[Math.floor(Math.random() * coldMessages.length)];
+            }
+        }
+    }
+
+    return inputData.map(lead => ({
+        contact: lead.Name,
+        message: generateMessage(lead["Conversation Summary"], lead["Lead Score"]),
+        time: getRandomTimeAgo(),
+        status: determineStatus(lead["Lead Score"], lead["Conversation Summary"])
+    }));
+}
+
+
+export function getDealsData(leads) {
+    // Initialize counters
+    const dealsData = {
+        hot: 0,
+        warm: 0,
+        cold: 0
+    };
+
+    // Count deals by lead score
+    leads.forEach(lead => {
+        const leadScore = lead.LeadScore || lead.leadScore || lead["Lead Score"] || '';
+        const normalizedScore = leadScore.toLowerCase().trim();
+        
+        switch (normalizedScore) {
+            case 'hot':
+                dealsData.hot++;
+                break;
+            case 'warm':
+                dealsData.warm++;
+                break;
+            case 'cold':
+                dealsData.cold++;
+                break;
+            default:
+                // Handle any other scores or empty values
+                // You can decide where to categorize these (e.g., as cold)
+                dealsData.cold++;
+                break;
+        }
+    });
+
+    return dealsData;
+}
+
+export function getTopHotDeals(leads, limit = 30) {
+    return leads
+        .filter(lead => {
+            const leadScore = lead.LeadScore || lead.leadScore || lead["Lead Score"] || '';
+            return leadScore.toLowerCase().trim() === 'hot';
+        })
+        .slice(0, limit)
+        .map(lead => ({
+            name: lead.Name,
+            email: lead.Email,
+            phone: lead["Phone Number"] || lead.PhoneNumber || lead.phone,
+            summary: lead["Conversation Summary"] || lead.ConversationSummary || lead.summary,
+            leadScore: lead.LeadScore || lead.leadScore || lead["Lead Score"],
+            linkedin: lead.LinkedIn,
+            whatsapp: lead.WhatsApp,
+            priority: 'high'
+        }));
+}
+
+export function getTopColdDeals(leads, limit = 30) {
+    return leads
+        .filter(lead => {
+            const leadScore = lead.LeadScore || lead.leadScore || lead["Lead Score"] || '';
+            return leadScore.toLowerCase().trim() === 'cold';
+        })
+        .slice(0, limit)
+        .map(lead => ({
+            name: lead.Name,
+            email: lead.Email,
+            phone: lead["Phone Number"] || lead.PhoneNumber || lead.phone,
+            summary: lead["Conversation Summary"] || lead.ConversationSummary || lead.summary,
+            leadScore: lead.LeadScore || lead.leadScore || lead["Lead Score"],
+            linkedin: lead.LinkedIn,
+            whatsapp: lead.WhatsApp,
+            priority: 'low'
+        }));
+    }

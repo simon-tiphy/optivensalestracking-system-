@@ -14,7 +14,7 @@ import {Agent} from "./components/Agents/Agent";
 import {WhatsApp} from "./components/Whatsapp/Whatsapp";
 import {Social} from "./components/Socials/Social";
 import {Insight} from "./components/Insights/Insight";
-import {processLeadScoreData,processLeadSourceData,getLeadSummaryStats} from "./DataAnalysis/index"
+import {processLeadScoreData,processLeadSourceData,getLeadSummaryStats, transformLeadData, getDealsData, getTopHotDeals, getTopColdDeals} from "./DataAnalysis/index"
 
  const baseUrl= 'https://optivenbackend.onrender.com/docs/optiven'
 const NAV_TABS = [
@@ -69,6 +69,10 @@ const socialMediaData = [
 ];
 
 
+let dealsData=[]
+let appData=[]
+let hotDeals=[]
+let coldDeals=[]
 
 
 function AppLayout() {
@@ -106,8 +110,11 @@ function AppLayout() {
       console.log(result['Sheet1']);
 
       leadSourceData= processLeadSourceData(result['Sheet1'])
-
-      
+      var leadData= transformLeadData(result['Sheet1'])
+      appData=leadData.slice(0,6)
+      dealsData= getDealsData(result['Sheet1'])
+      hotDeals= getTopHotDeals(result['Sheet1'])
+      coldDeals= getTopColdDeals(result['Sheet1'])
     } catch (error) {
       
     } finally {
@@ -145,7 +152,7 @@ function AppLayout() {
             <Route path="/leads-conversions" element={<Lead conversionFunnelData={conversionFunnelData} leadSourceData={leadSourceData} />} />
             <Route path="/campaign-insights" element={<Campaign campaignData={campaignData} />} />
             <Route path="/agent-performance" element={<Agent agentData={agentData} />} />
-            <Route path="/whatsapp-activity" element={<WhatsApp  />} />
+            <Route path="/whatsapp-activity" element={<WhatsApp  appData={appData} dealsData={dealsData} hot={hotDeals} cold={coldDeals} />} />
             <Route path="/social-media-summary" element={<Social socialMediaData={socialMediaData}/>} />
             <Route path="/recommendations" element={<Insight />} />
           </Routes>

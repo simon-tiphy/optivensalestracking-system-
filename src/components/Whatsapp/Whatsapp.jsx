@@ -160,16 +160,15 @@ import { MetricCard } from "../Metrics/MetricCard"
 import { Clock, MessageSquare, Activity } from "lucide-react"
 import {
   ResponsiveContainer,
-  XAxis,
-  YAxis,
+  PieChart,
+  Pie,
   Tooltip,
-  Area,
-  CartesianGrid,
-  Legend,
-  AreaChart,
+  Cell,
+  Legend
 } from "recharts"
+import { HotColdDealsComponent } from "./HotDealsComponent"
 
-export function WhatsApp() {
+export function WhatsApp({appData, dealsData,hot,cold}) {
   const fadeUp = { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } } }
 
   return (
@@ -193,41 +192,86 @@ export function WhatsApp() {
       </motion.div>
 
       {/* Follow‑up Activity */}
-      <motion.div
-        className="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700"
-        initial="hidden"
-        animate="visible"
-        variants={fadeUp}
-      >
-        <h3 className="text-lg font-semibold text-gray-100 mb-4">🔄 Follow‑up Activity</h3>
-        <div className="h-64">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
-              data={[
-                { name: "Mon", auto: 45, manual: 12 },
-                { name: "Tue", auto: 52, manual: 8 },
-                { name: "Wed", auto: 48, manual: 15 },
-                { name: "Thu", auto: 61, manual: 10 },
-                { name: "Fri", auto: 55, manual: 18 },
-                { name: "Sat", auto: 42, manual: 22 },
-                { name: "Sun", auto: 38, manual: 25 },
-              ]}
-            >
-              <CartesianGrid stroke="#444" strokeDasharray="3 3" />
-              <XAxis dataKey="name" stroke="#aaa" />
-              <YAxis stroke="#aaa" />
-              <Tooltip
-                contentStyle={{ backgroundColor: "#1f2937", borderColor: "#374151" }}
-                labelStyle={{ color: "#e5e7eb" }}
-              />
-              <Area type="monotone" dataKey="auto" stackId="1" stroke="#3B82F6" fill="#3B82F6" />
-              <Area type="monotone" dataKey="manual" stackId="1" stroke="#10B981" fill="#10B981" />
-              <Legend wrapperStyle={{ color: "#ccc" }} />
-            </AreaChart>
-          </ResponsiveContainer>
-        </div>
-      </motion.div>
+      
+<motion.div
+  className="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700"
+  initial="hidden"
+  animate="visible"
+  variants={fadeUp}
+>
+  <h3 className="text-lg font-semibold text-gray-100 mb-4">📈 Deals Overview</h3>
+  
+  {/* Summary Cards */}
+  <div className="grid grid-cols-3 gap-4 mb-6">
+    <div className="bg-red-900/30 p-4 rounded-xl border border-red-700/50">
+      <div className="text-red-400 text-sm font-medium">Hot Deals</div>
+      <div className="text-2xl font-bold text-red-300">{dealsData.hot || 0}</div>
+      <div className="text-xs text-red-500 mt-1">High priority</div>
+    </div>
+    
+    <div className="bg-yellow-900/30 p-4 rounded-xl border border-yellow-700/50">
+      <div className="text-yellow-400 text-sm font-medium">Warm Deals</div>
+      <div className="text-2xl font-bold text-yellow-300">{dealsData.warm || 0}</div>
+      <div className="text-xs text-yellow-500 mt-1">Medium priority</div>
+    </div>
+    
+    <div className="bg-blue-900/30 p-4 rounded-xl border border-blue-700/50">
+      <div className="text-blue-400 text-sm font-medium">Cold Deals</div>
+      <div className="text-2xl font-bold text-blue-300">{dealsData.cold || 0}</div>
+      <div className="text-xs text-blue-500 mt-1">Low priority</div>
+    </div>
+  </div>
 
+  {/* Chart */}
+  <div className="h-48">
+    <ResponsiveContainer width="100%" height="100%">
+      <PieChart>
+        <Pie
+          data={[
+            { name: 'Hot', value: dealsData.hot || 0, fill: '#DC2626' },
+            { name: 'Warm', value: dealsData.warm || 0, fill: '#D97706' },
+            { name: 'Cold', value: dealsData.cold || 0, fill: '#2563EB' }
+          ]}
+          cx="50%"
+          cy="50%"
+          innerRadius={40}
+          outerRadius={80}
+          paddingAngle={5}
+          dataKey="value"
+        >
+          {[
+            { name: 'Hot', value: dealsData.hot || 0, fill: '#DC2626' },
+            { name: 'Warm', value: dealsData.warm || 0, fill: '#D97706' },
+            { name: 'Cold', value: dealsData.cold || 0, fill: '#2563EB' }
+          ].map((entry, index) => (
+            <Cell key={`cell-${index}`} fill={entry.fill} />
+          ))}
+        </Pie>
+        <Tooltip
+          contentStyle={{ 
+            backgroundColor: "#1f2937", 
+            borderColor: "#374151",
+            color: "#e5e7eb"
+          }}
+        />
+        <Legend 
+          wrapperStyle={{ color: "#ccc" }}
+          iconType="circle"
+        />
+      </PieChart>
+    </ResponsiveContainer>
+  </div>
+  
+  {/* Total Count */}
+  <div className="mt-4 pt-4 border-t border-gray-700">
+    <div className="flex justify-between items-center">
+      <span className="text-gray-400 text-sm">Total Deals</span>
+      <span className="text-xl font-bold text-gray-100">
+        {(dealsData.hot || 0) + (dealsData.warm || 0) + (dealsData.cold || 0)}
+      </span>
+    </div>
+  </div>
+</motion.div>
       {/* Recent Conversations */}
       <motion.div
         className="bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-700"
@@ -237,12 +281,7 @@ export function WhatsApp() {
       >
         <h3 className="text-lg font-semibold text-gray-100 mb-4">📜 Recent Conversations</h3>
         <div className="space-y-4">
-          {[
-            { contact: "John Smith", message: "Interested in your product demo", time: "2 min ago", status: "active" },
-            { contact: "Sarah Wilson", message: "Can you send me the pricing?", time: "5 min ago", status: "responded" },
-            { contact: "Mike Johnson", message: "When is the next webinar?", time: "10 min ago", status: "pending" },
-            { contact: "Lisa Brown", message: "Thank you for the information", time: "15 min ago", status: "closed" },
-          ].map((conv, idx) => (
+          {appData.map((conv, idx) => (
             <motion.div
               key={idx}
               variants={fadeUp}
@@ -281,6 +320,8 @@ export function WhatsApp() {
           ))}
         </div>
       </motion.div>
+
+      <HotColdDealsComponent hotDeals={hot} coldDeals={cold}/>
     </div>
   )
 }
