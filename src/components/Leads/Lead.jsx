@@ -102,26 +102,12 @@ const trendData = [
   { week: "Week 4", WhatsApp: 132, Instagram: 77, LinkedIn: 63, Facebook: 55, Website: 42, Others: 55 },
 ]
 
-const leadSourceData1 = [
-  { name: "WhatsApp Business", value: 485, color: "#25D366", growth: "+15%", conversionRate: 32 },
-  { name: "Instagram", value: 342, color: "#E4405F", growth: "+8%", conversionRate: 28 },
-  { name: "LinkedIn", value: 298, color: "#0077B5", growth: "+22%", conversionRate: 45 },
-  { name: "Facebook", value: 234, color: "#1877F2", growth: "+5%", conversionRate: 24 },
-  { name: "Website Forms", value: 187, color: "#FF6B6B", growth: "+12%", conversionRate: 38 },
-  { name: "Google Ads", value: 156, color: "#4285F4", growth: "+18%", conversionRate: 41 },
-  { name: "Email Marketing", value: 123, color: "#34A853", growth: "+7%", conversionRate: 29 },
-  { name: "Referrals", value: 98, color: "#4ECDC4", growth: "+25%", conversionRate: 52 },
-  { name: "YouTube", value: 76, color: "#FF0000", growth: "+35%", conversionRate: 19 },
-  { name: "TikTok", value: 54, color: "#000000", growth: "+68%", conversionRate: 16 },
-  { name: "Twitter", value: 43, color: "#1DA1F2", growth: "+3%", conversionRate: 22 },
-  { name: "Cold Calling", value: 32, color: "#FFA500", growth: "-5%", conversionRate: 15 },
-]
 
-export function Lead({ conversionFunnelData }) {
+export function Lead({ conversionFunnelData , leadSourceData}) {
   return (
     <div className="bg-gray-900 text-gray-100 min-h-screen p-8 space-y-8">
       {/* Lead Source Analysis */}
-      <LeadSource leadSourceData={leadSourceData1} trendData={trendData} />
+      <LeadSource leadSourceData={leadSourceData} trendData={trendData} />
 
       {/* Time to Conversion & Funnel */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

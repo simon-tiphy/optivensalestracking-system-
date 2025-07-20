@@ -379,15 +379,7 @@ export function LeadSource({ leadSourceData, trendData }) {
                 />
                 <span className="font-medium">{source.name}</span>
               </div>
-              <span
-                className={`text-xs px-2 py-1 rounded-full ${
-                  source.growth.startsWith("+")
-                    ? "bg-green-600 bg-opacity-20 text-green-400"
-                    : "bg-red-600 bg-opacity-20 text-red-400"
-                }`}
-              >
-                {source.growth}
-              </span>
+             
             </div>
             <div className="space-y-2">
               <div className="flex justify-between text-gray-400">

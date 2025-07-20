@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -14,7 +14,9 @@ import {Agent} from "./components/Agents/Agent";
 import {WhatsApp} from "./components/Whatsapp/Whatsapp";
 import {Social} from "./components/Socials/Social";
 import {Insight} from "./components/Insights/Insight";
+import {processLeadScoreData,processLeadSourceData,getLeadSummaryStats} from "./DataAnalysis/index"
 
+ const baseUrl= 'https://optivenbackend.onrender.com/docs/optiven'
 const NAV_TABS = [
   { name: "Overview", path: "/" },
   { name: "Leads & Conversions", path: "/leads-conversions" },
@@ -35,13 +37,7 @@ const NAV_TABS = [
   { name: 'Sun', revenue: 32000 }
 ];
 
-const leadSourceData = [
-  { name: 'WhatsApp', value: 35, color: '#25D366' },
-  { name: 'Social Media', value: 25, color: '#1DA1F2' },
-  { name: 'Website', value: 20, color: '#FF6B6B' },
-  { name: 'Referral', value: 15, color: '#4ECDC4' },
-  { name: 'Direct', value: 5, color: '#45B7D1' }
-];
+let leadSourceData = [];
 
 const conversionFunnelData = [
   { stage: 'Captured', count: 1000, color: '#3B82F6' },
@@ -72,11 +68,14 @@ const socialMediaData = [
   { platform: 'Facebook', posts: 6, likes: 800, comments: 60, saves: 30 }
 ];
 
- 
+
+
 
 function AppLayout() {
   const [activeTab, setActiveTab] = React.useState("Overview");
   const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleTabClick = (tabName) => {
     const tab = NAV_TABS.find((t) => t.name === tabName);
@@ -85,6 +84,51 @@ function AppLayout() {
       navigate(tab.path);
     }
   };
+
+  async function fetchData(){
+    setIsLoading(true);
+    try {
+      
+      const response= await fetch(baseUrl,{
+        headers:{
+           'Content-Type': 'application/json',
+        }
+      })
+
+      if(!response.ok){
+        //error
+        console.log("error");
+        
+      }
+
+      const result= await response.json()
+      setData(result['Sheet1'])
+      console.log(result['Sheet1']);
+
+      leadSourceData= processLeadSourceData(result['Sheet1'])
+
+      
+    } catch (error) {
+      
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  useEffect(()=>{
+    fetchData();
+  },[])
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center" style={{ background: 'var(--color-background)', color: 'var(--color-text)' }}>
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-current mb-4"></div>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen" style={{ background: 'var(--color-background)', color: 'var(--color-text)' }}>
@@ -120,5 +164,3 @@ function App() {
 }
 
 export default App;
-
-
