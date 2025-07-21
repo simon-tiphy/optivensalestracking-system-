@@ -148,7 +148,7 @@ export function Campaign({ campaignData }) {
               />
               <Tooltip
                 wrapperStyle={{ backgroundColor: "#1f2937", borderColor: "#374151" }}
-                contentStyle={{ color: "#f9fafb" }}
+                contentStyle={{ color: "#000000" }}
                 formatter={(value) => [`$${value}`, "Cost per Lead"]}
               />
               <Bar dataKey="costPerLead" fill="url(#gradBlue)" radius={[6, 6, 0, 0]} />
