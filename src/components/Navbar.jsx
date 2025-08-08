@@ -12,7 +12,7 @@ function Navbar() {
           <img
             src="https://www.iconpacks.net/icons/free-icons-6/free-blue-sales-price-tag-or-discount-sticker-icon-18978-thumb.png"
             alt="Optiven Logo"
-            className="h-16 w-auto"
+            className="h-13 w-auto"
           />
         </div>
 
