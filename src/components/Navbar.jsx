@@ -10,9 +10,9 @@ function Navbar() {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <img
-            src="https://www.optiven.co.ke/wp-content/uploads/2023/09/optiven-group-logo.png"
+            src="https://www.iconpacks.net/icons/free-icons-6/free-blue-sales-price-tag-or-discount-sticker-icon-18978-thumb.png"
             alt="Optiven Logo"
-            className="h-10 w-auto"
+            className="h-16 w-auto"
           />
         </div>
 
